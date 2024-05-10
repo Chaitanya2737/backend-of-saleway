@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const user = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -20,7 +20,18 @@ const user = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("user", user);
-User.createIndexes();
+const User = mongoose.model("User", userSchema);
+
+// Wait for MongoDB connection to be established
+mongoose.connection.on('connected', () => {
+  // Create indexes after connection is established
+  User.createIndexes()
+    .then(() => {
+      console.log("Indexes created successfully");
+    })
+    .catch((err) => {
+      console.error("Error creating indexes:", err);
+    });
+});
 
 module.exports = User;
