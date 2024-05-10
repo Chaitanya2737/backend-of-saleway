@@ -4,6 +4,6 @@ mongoose.connect("mongodb+srv://chaitanyasatarkar123:Chaitanya@cluster0.c6dlbcu.
     console.log("db connnected")
 }).catch((error) => {
     console.log(error)
-})
+}) // add your mongoDB collection with your connecting url
 
 module.exports =  mongoose.connection
