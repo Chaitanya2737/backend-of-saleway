@@ -4,6 +4,7 @@ const User = require("../model/user");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const fetchuser = require("../middleware/fetchuser");
 
 
 // route-1 to sign or we can say that to create the user 
@@ -98,7 +99,7 @@ router.post("/login", [
       {
         id: user.id,
       },
-      "abcdefg"
+      "abcdefg"// secret key should assigned in .env file. but due to limited time period i assigned in simple way . you should work on that.
     ); // creating auth token
 
     res.send(authToken); // sending auth token
@@ -108,5 +109,25 @@ router.post("/login", [
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
+router.post("/getUser", fetchuser, async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).send("User information not found");
+    }
+
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    res.send(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 module.exports = router;
