@@ -12,6 +12,12 @@ app.use(express.json())
 
 
 app.use("/api/auth" , require("./routes/user"))
+app.use("/data" , require("./routes/ChartData"))
+app.use("/linechart" , require("./routes/linechart"))
+
+app.use("/product" , require("./routes/product"))
+
+
 
 app.get("/" ,(req , res)=>{
     res.send("api working ")
